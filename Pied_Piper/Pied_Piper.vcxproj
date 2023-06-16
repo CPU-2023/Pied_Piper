@@ -139,9 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="modules.c" />
     <ClCompile Include="Pied_Piper.c" />
+    <ClCompile Include="Pied_Piper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="modules.h" />
     <ClInclude Include="Pied_Piper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,406 +1,221 @@
 ﻿#include "Pied_Piper.h"
+// _getch() value of ESC key
+#define ESC 27
+#define UP 72
+#define DOWN 80
+#define SUBMIT 4
+#define ENTER 13
+
+/* 함수 선언 */
+int keyControl();
+int menuDraw();
+void print_piano();
+int MakeRandNote(int random);
+int playGame(char** dp, int n);
+void rule();
+void guess_note(void);
+
+char* p[SIZE] = { "도", "레", "미", "파", "솔" , "라", "시", "도", "레", "미" };
 
 
-HANDLE musicThread;
-HANDLE controlThread;
-
-int score = 0; //점수
-double beginTime;
-double endTime;
-double thisTime; //begin-end;
-int showMN = 0;
-double chktime = 0; // 플레이어 움직임 체크
-int answer[160]; //문제 저장
-int answer_len = 160;
-int heart = 5; //목숨값
-int input = 1;
-
-
-
-
-
-//좌표
-void gotoxy(int x, int y)
-{
-	COORD Pos;
-	Pos.X = x * 2;
-	Pos.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
-}
-
-
-//커서 숨기기
-void CursorView()
-{
-	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
-	cursorInfo.dwSize = 1;
-	cursorInfo.bVisible = FALSE;
-	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
-}
-
-//커서 제어
 int keyControl() {
-	char c;
+	char temp;
 	while (1) {
 		if (_kbhit()) {
-			c = _getch();
-			if (c == -32) {
-				c = _getch();
-				switch (c) {
-				case 27:
-					return ESC; break;
-				case 72:
-					return UP; break;
-				case 80:
-					return DOWN;  break;
-				case 75:
-					return LEFT; break;
-				case 77:
-					return RIGHT; break;
+			temp = _getch();
+			if (temp == -32) {
+				temp = _getch();
+				switch (temp) {
+				case UP:
+					return UP;
+					break;
+				case DOWN:
+					return DOWN;
+					break;
 				}
 			}
-			else if (c == ' ')
-				return SPACE;
+			else if (temp == 13) {
+				return ENTER;
+			}
+			else if (temp == 27) {
+				return ESC;
+			}
 		}
+		return 0;
 	}
 }
 
-//제목
-void title() {
-	 
-	int x = 9;
-	int y = 4;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), LIGHTBLUE);
-	gotoxy(x, y++);  printf(" _______  ___   _______  ______     _______  ___   _______  _______  ______   ");
-	gotoxy(x, y++);  printf("|       ||   | |       ||      |   |       ||   | |       ||       ||    _ |  ");
-	gotoxy(x, y++);  printf("|    _  ||   | |    ___||  _    |  |    _  ||   | |    _  ||    ___||   | ||  ");
-	gotoxy(x, y++);  printf("|   |_| ||   | |   |___ | | |   |  |   |_| ||   | |   |_| ||   |___ |   |_||_ ");
-	gotoxy(x, y++);  printf("|    ___||   | |    ___|| |_|   |  |    ___||   | |    ___||    ___||    __  |");
-	gotoxy(x, y++);  printf("|   |    |   | |   |___ |       |  |   |    |   | |   |    |   |___ |   |  | |");
-	gotoxy(x, y++);  printf("|___|    |___| |_______||______|   |___|    |___| |___|    |_______||___|  |_|");
+int menuDraw() {
+	PlaySound(TEXT("guess_note.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	system("cls");
 
-
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
-	x = 15, y = 15;
-	gotoxy(x, y);
-	printf(" ---||-------||-------||----||------||-------||-----");
-	gotoxy(x, ++y);
-	printf("|                                                   |");
-	gotoxy(x, ++y);
-	printf("|         이번 게임은 피리부는 사나이 입니다        |");
-	gotoxy(x, ++y);
-	printf("|                                                   |");
-	gotoxy(x, ++y);
-	printf("|   화면에 나오는 화살표가 같은 화살표를 클릭하고   |");
-	gotoxy(x, ++y);
-	printf("|     총 3번의 기회 안에 도착지에 도착하세요!!      |");
-	gotoxy(x, ++y);
-	printf("|                                                   |");
-	gotoxy(x, ++y);
-	printf("|       스페이스키(space key)를 눌러 시작하세요     |");
-	gotoxy(x, ++y);
-	printf("|                                                   |");
-	gotoxy(x, ++y);
-	printf(" ---||-------||-------||----||------||-------||-----");
-
-
-	x = 3, y = 15;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
-	gotoxy(x, ++y);
-	printf("　　ｏ");
-	gotoxy(x, ++y);
-	printf("　°");
-	gotoxy(x, ++y);
-	printf("　┳┳   ∩∩");
-	gotoxy(x, ++y);
-	printf("　┃┃ (0 ㅁ 0)");
-	gotoxy(x, ++y);
-	printf("┏┻┻┷━Ｏ┏┷┓┏┷┓");
-	gotoxy(x, ++y);
-	printf("┃ 　　  　 ┠┨○┠┨○┃");
-	gotoxy(x, ++y);
-	printf("┗◎━━◎┛┗◎┛┗◎┛");
 	
-}
+
+	int x = 23;
+	int y = 4;
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+	print_auto_y(&x, &y, " _______  ___   _______  ______     _______  ___   _______  _______  ______   ");
+	print_auto_y(&x, &y, "|       ||   | |       ||      |   |       ||   | |       ||       ||    _ |  ");
+	print_auto_y(&x, &y, "|    _  ||   | |    ___||  _    |  |    _  ||   | |    _  ||    ___||   | ||  ");
+	print_auto_y(&x, &y, "|   |_| ||   | |   |___ | | |   |  |   |_| ||   | |   |_| ||   |___ |   |_||_ ");
+	print_auto_y(&x, &y, "|    ___||   | |    ___|| |_|   |  |    ___||   | |    ___||    ___||    __  |");
+	print_auto_y(&x, &y, "|   |    |   | |   |___ |       |  |   |    |   | |   |    |   |___ |   |  | |");
+	print_auto_y(&x, &y, "|___|    |___| |_______||______|   |___|    |___| |___|    |_______||___|  |_|");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+
+	gotoxy(41, 15);
+	printf("들리는 음을 듣고 알맞은 음을 쓰세요~!");
+	gotoxy(46, 16);
+	printf("다시 들으려면 0을 입력하세요!");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 
 
+	x = 50;
+	y = 21;
+
+	gotoxy(x - 2, y); // -2한 이유는 >를 출력하기 위해서
+	printf(">     게 임 시 작 \n");
+	gotoxy(x, y + 2);
+	printf("    게 임 종 료 \n");
+	print_by_name("윤소희");
 
 
-
-
-void showMenu() {
-	int x = 45;
-	int y = 22;
-
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
-	gotoxy(x - 1, y);  printf("▶ 게 임 시 작");
-	gotoxy(x, y += 2);  printf(" 게 임 종 료");
-
-	gotoxy(30, y -= 2);
-}
-//메뉴선택
-int  menu() {
-
-	int x = 45;
-	int y = 22;
-	int show = 0;
-
-	//if (++showMN == 1) showMenu();
 
 	while (1) {
 		int n = keyControl();
-		switch (n)
-		{
-
+		switch (n) {
 		case UP: {
-			if (y > 22) {
+			if (y > 21) { //y는 12~14까지만 이동
+				gotoxy(x - 2, y); // x-2하는 이유는 >를 두 칸 이전에 출력하기 위해서
+				printf(" ");
 
-				gotoxy(x - 1, y); printf("  ");
-				gotoxy(x - 1, y -= 2); printf("▶");
+				gotoxy(x - 2, y -= 2); //새로 이동한 위치로 이동하여
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+				printf(">"); //다시 그리기
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 			}
 			break;
 		}
 		case DOWN: {
-			if (y < 24) {
-				gotoxy(x - 1, y); printf("  ");
-				gotoxy(x - 1, y += 2); printf("▶");
-			}
+			if (y < 23) { //최대 20
+				gotoxy(x - 2, y);
+				printf(" ");
 
+				gotoxy(x - 2, y += 2);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+				printf(">");
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+			}
 			break;
 		}
-		case SPACE: {
-			return y - 22;
-		}	break;
+		case ENTER: {
+			return y - 21;
+			break;
+		}
 		}
 	}
-
+	return 0;
 }
 
-//완료 체크
-void checkFinish(int x, int y) {
-	if (x >= 50 && y >= 1 && y <= 23) {
+void print_piano() {
+	gotoxy(34, 11);
+	puts("□□■■ ■■□□□■■ ■■ ■■□□□■■ ■■□□");
+	gotoxy(34, 12);
+	puts("□  ■■ ■■  □  ■■ ■■ ■■  □  ■■ ■■  □ ");
+	gotoxy(34, 13);
+	puts("□  ■■ ■■  □  ■■ ■■ ■■  □  ■■ ■■  □ ");
+	gotoxy(34, 14);
+	puts("□  ■■ ■■  □  ■■ ■■ ■■  □  ■■ ■■  □ ");
+	gotoxy(34, 15);
+	puts("□  ■■ ■■  □  ■■ ■■ ■■  □  ■■ ■■  □ ");
+	gotoxy(34, 16);
+	puts("□  ■■ ■■  □  ■■ ■■ ■■  □  ■■ ■■  □ ");
+	gotoxy(34, 17);
+	puts("□   □   □   □   □   □   □   □   □   □   □");
+	gotoxy(34, 18);
+	puts("□ 1 □ 2 □ 3 □ 4 □ 5 □ 6 □ 7 □ 8 □ 9 □ 10□");
+	gotoxy(34, 19);
+	puts("□□□□□□□□□□□□□□□□□□□□□□□□□□");
+}
+
+// 랜덤 음 출력하는 함수
+int MakeRandNote(int random) {
+	double frequency[] = { 523, 587, 659, 699, 784, 880, 988, 1047, 1175, 1319 };
+	const int note_len = 600;
+
+	Beep(frequency[random], note_len);
+
+	return 0;
+}
+
+int playGame(char** dp, int n) {
+	int count = 0;
+	while (1) {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15 | (0 << 4));
+
+		srand((unsigned int)time(NULL));
+		int random = (rand() % 10);
+
+		MakeRandNote(random);
+
 		system("cls");
-		gotoxy(30, 13); printf("완주");
-	}
-}
 
-int m_x = 3; //화살표 처음 위치
+		print_piano();
 
-//캐릭터 움직이기
+		int answer;
 
+		while (1) {
+			gotoxy(34, 9);
+			printf("무슨 음일까요?: ");
+			scanf("%d", &answer);
 
-unsigned _stdcall character_control() {
-	int x = 4;
-	int y = 6;
-
-	int i = 0;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
-	gotoxy(x, y); printf("■");
-	while (input) {
-
-		int n = _getch();
-
-		//게임종료
-		if (n == 27) {
-			score = 0;
-			heart = 5;
-			PlaySound(NULL, 0, 0);
-			system("cls");
-			main();
+			if (answer == 0) {
+				MakeRandNote(random);
+			}
+			else {
+				break;
+			}
 		}
-		n = keyControl();
-		switch (n)
-		{
 
-
-		case RIGHT: {
-
-			if (answer[i] == 0) { score += 10; }
-			else heart--;
-			break;
-
-
+		if (answer == random + 1) {
+			gotoxy(75, 9);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14 | (0 << 4));
+			printf("정답입니다!\n");
+			count++;
+			//printf("%d", count);
 		}
-		case LEFT: {
-
-			if (answer[i] == 1) { score += 10; }
-			else heart--;
-			break;
-
-
-		}
-		case UP: {
-
-			if (answer[i] == 3) { score += 10; }
-			else heart--;
-
-
+		else if (answer != 0 && answer != random + 1) {
+			gotoxy(64, 9);
+			printf("땡! 정답은 %d(%s)입니다.\n", random + 1, *(dp + random));
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12 | (0 << 4));
+			for (int n = 3; n > 0; --n) {
+				gotoxy(82, 29);
+				printf("%d초 후에 메인화면으로 돌아갑니다...\n", n);
+				Sleep(1000);
+			}
+			//Sleep(2500);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15 | (0 << 4));
 			break;
 		}
-
-		case DOWN: {
-
-			if (answer[i] == 2) { score += 10; }
-			else heart--;
-			break;
-		}
-
-
-		}
-		switch (i / 5)
-		{
-		case 0: gotoxy(x, y++); printf("  "); break;
-		case 1: gotoxy(x++, y); printf("  "); break;
-		case 2: gotoxy(x, y++); printf("  "); break;
-		case 3: gotoxy(x++, y); printf("  "); break;
-		case 4: gotoxy(x, y--); printf("  "); break;
-		case 5: gotoxy(x++, y); printf("  "); break;
-		case 6: gotoxy(x, y++); printf("  "); break;
-		case 7: gotoxy(x++, y); printf("  "); break;
-		case 8: gotoxy(x, y++); printf("  "); break;
-		case 9: gotoxy(x++, y); printf("  "); break;
-		case 10:  gotoxy(x, y--); printf("  "); break;
-		case 11:  gotoxy(x, y--); printf("  "); break;
-		case 12:  gotoxy(x, y--); printf("  "); break;
-		case 13:  gotoxy(x--, y); printf("  "); break;
-		case 14:  gotoxy(x--, y); printf("  "); break;
-		case 15:  gotoxy(x, y--); printf("  "); break;
-		case 16:  gotoxy(x++, y); printf("  "); break;
-		case 17:  gotoxy(x++, y); printf("  "); break;
-		case 18:  gotoxy(x++, y); printf("  "); break;
-		case 19:  gotoxy(x, y++); printf("  "); break;
-		case 20:  gotoxy(x, y++); printf("  "); break;
-		case 21:  gotoxy(x, y++); printf("  "); break;
-		case 22:  gotoxy(x++, y); printf("  "); break;
-		case 23:  gotoxy(x, y++); printf("  "); break;
-		case 24:  gotoxy(x++, y); printf("  "); break;
-		case 25:  gotoxy(x, y--); printf("  "); break;
-		case 26:  gotoxy(x, y--); printf("  "); break;
-		case 27:  gotoxy(x++, y); printf("  "); break;
-		}
-
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
-		i++;
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
-		gotoxy(20, 29); printf(" % d", score);
-		gotoxy(46, 29); printf(" %d", heart);
-
 	}
-
+	return 0;
 }
 
-
-
-
-
-//맵
-void map() {
-
-	int show = 0; // 1 = show, 0 - hide
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
-	for (int i = 0; i < 60; i++) {
-		gotoxy(i, 0); printf("■0");
-	}
-
-	for (int i = 0; i < 60; i++) {
-		gotoxy(i, 29); printf("■");
-	}
-	
-
-
-
-}
-
-
-
-//미션출력
-void mission() {
-	srand(time(NULL));
-	char m[4][10] = { "→","←","↓","↑" };
-	
-	int x = 4, y = 6;
-
-	for (int i = 0; i < 160; i++) {
-		int rn = (rand() % 4);
-		answer[i] = rn;
-
-		switch (i / 5)
-		{
-		case 0: gotoxy(x, y++); printf("%s", m[rn]); break;
-		case 1:  gotoxy(x++, y); printf("%s", m[rn]);   break;
-		case 2:  gotoxy(x, y++); printf("%s", m[rn]);   break;
-		case 3: gotoxy(x++, y); printf("%s", m[rn]);  break;
-
-		case 4: gotoxy(x, y--);  printf("%s", m[rn]);  break;
-
-		case 5: gotoxy(x++, y); printf("%s", m[rn]); break;
-		case 6:  gotoxy(x, y++); printf("%s", m[rn]);  break;
-		case 7:  gotoxy(x++, y);  printf("%s", m[rn]);  break;
-		case 8:  gotoxy(x, y++); printf("%s", m[rn]);  break;
-		case 9:  gotoxy(x++, y);  printf("%s", m[rn]);  break;
-
-		case 10:  gotoxy(x, y--); printf("%s", m[rn]);  break;
-		case 11:  gotoxy(x, y--); printf("%s", m[rn]);  break;
-		case 12:  gotoxy(x, y--); printf("%s", m[rn]);  break;
-
-		case 13:  gotoxy(x--, y); printf("%s", m[rn]);  break;
-		case 14:  gotoxy(x--, y); printf("%s", m[rn]);  break;
-		case 15:  gotoxy(x, y--); printf("%s", m[rn]);  break;
-		case 16:  gotoxy(x++, y); printf("%s", m[rn]);  break;
-		case 17:  gotoxy(x++, y); printf("%s", m[rn]);  break;
-		case 18:  gotoxy(x++, y); printf("%s", m[rn]);  break;
-		case 19:  gotoxy(x, y++); printf("%s", m[rn]);  break;
-		case 20:  gotoxy(x, y++); printf("%s", m[rn]);  break;
-		case 21:  gotoxy(x, y++); printf("%s", m[rn]);  break;
-		case 22:  gotoxy(x++, y); printf("%s", m[rn]);  break;
-		case 23:  gotoxy(x, y++); printf("%s", m[rn]);  break;
-		case 24:  gotoxy(x++, y); printf("%s", m[rn]);  break;
-		case 25:  gotoxy(x, y--); printf("%s", m[rn]);  break;
-		case 26:  gotoxy(x, y--); printf("%s", m[rn]);  break;
-		case 27:  gotoxy(x++, y); printf("%s", m[rn]);  break;
-		}
-
-		//화살표 출력
-	}
-}
-
-
-
-
-
-
-
-
-//게임 시작
-void game() {
+void main(void) {
 	system("cls");
-	CursorView(); //커서 숨기기
-
-	mission(); //미션
-	map(); //맵 그리기
-
-
-	system("pause>null\n");
-}
-
-
-void main() {
-
-
-	CursorView();
-	system("mode con: cols=120 lines=30");
-	system("title 피리부는 사나이");
-
-	title();
-	showMenu();
 
 	while (1) {
-		switch (menu()) {
-		case 0: 	input = 1;  game(); break; //게임시작
-		case 2: exit(0);  break; // 게임종료
-		//case esc: main() break;
+		int menuCode = menuDraw();
+		switch (menuCode) {
+		case 0:
+			PlaySound(NULL, 0, 0);
+			playGame(p, SIZE);
+			break;
+		case 2:
+			break;
 		}
-
+		system("cls");
 	}
-	system("pause>null\n");
+	return 0;
 }

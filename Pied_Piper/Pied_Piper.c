@@ -134,7 +134,7 @@ void print_piano() {
 	gotoxy(34, 17);
 	puts("□   □   □   □   □   □   □   □   □   □   □");
 	gotoxy(34, 18);
-	puts("□ 1 □ 2 □ 3 □ 4 □ 5 □ 6 □ 7 □ 8 □ 9 □ 10□");
+	puts("□   □   □   □   □   □   □   □   □   □   □");
 	gotoxy(34, 19);
 	puts("□□□□□□□□□□□□□□□□□□□□□□□□□□");
 }
@@ -149,7 +149,7 @@ int MakeRandNote(int random) {
 	return 0;
 }
 
-int playGame(char** dp, int n) {
+int pr_str_array(char** dp, int n) {
 	int count = 0;
 	while (1) {
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15 | (0 << 4));
@@ -168,7 +168,7 @@ int playGame(char** dp, int n) {
 		while (1) {
 			gotoxy(34, 9);
 			printf("무슨 음일까요?: ");
-			scanf("%d", &answer);
+			scanf("%s", &answer);
 
 			if (answer == 0) {
 				MakeRandNote(random);
@@ -202,20 +202,56 @@ int playGame(char** dp, int n) {
 	return 0;
 }
 
+int playGame() {
+	char* p[SIZE] = { "도", "레", "미", "파", "솔" , "라", "시" };
+	while (1) {
+		int n = keyControl();
+		switch (n) {
+		case SUBMIT: {
+			return pr_str_array(p, SIZE);
+		}
+		}
+	}
+	return 0;
+}
+void rule() {
+	system("cls");
+	gotoxy(26, 14);
+	printf("게임 시작 전 한글로 설정되어 있는지 확인해주세요.");
+	gotoxy(75, 29);
+	printf("게임을 시작하려면 스페이스바를 누르세요...");
+	playGame();
+}
+
 void main(void) {
 	system("cls");
+
+	char* p[SIZE] = { "도", "레", "미", "파", "솔" , "라", "시" };
+	int x = 100, y = 20;
+	char key;
+
 
 	while (1) {
 		int menuCode = menuDraw();
 		switch (menuCode) {
 		case 0:
-			PlaySound(NULL, 0, 0);
-			playGame(p, SIZE);
+			pr_str_array(p, SIZE);
 			break;
 		case 2:
+			rule();
+			break;
+		case 4:
+			main();
 			break;
 		}
 		system("cls");
 	}
+
+	do {
+		gotoxy(x, y);
+		printf("guess note");
+		key = _getch();
+	} while (key != ESC);
+
 	return 0;
 }

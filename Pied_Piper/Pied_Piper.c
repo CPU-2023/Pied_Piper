@@ -149,52 +149,44 @@ int MakeRandNote(int random) {
 	return 0;
 }
 
-int pr_str_array(char** dp, int n) {
-	int count = 0;
+int pr_str_array(char** dp, int n) {	
 	while (1) {
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15 | (0 << 4));
+		double frequency[] = { 523.2511, 587.3295, 659.2551, 698.456, 783.9909, 880, 987.7666 };
+		const int note_len = 600;
 
 		srand((unsigned int)time(NULL));
-		int random = (rand() % 10);
+		int random = (rand() % 7);
 
-		MakeRandNote(random);
+		for (int i = 0; i < 7; i++) {
+			if (random == i + 1) {
+				Sleep(200);
+			}
+		}
+		Beep(frequency[random], note_len);
+
 
 		system("cls");
 
+		char answer[10];
+
 		print_piano();
 
-		int answer;
+		gotoxy(34, 9);
+		printf("무슨 음일까요?: ");
+		scanf("%s", answer);
 
-		while (1) {
-			gotoxy(34, 9);
-			printf("무슨 음일까요?: ");
-			scanf("%s", &answer);
-
-			if (answer == 0) {
-				MakeRandNote(random);
-			}
-			else {
-				break;
-			}
-		}
-
-		if (answer == random + 1) {
-			gotoxy(75, 9);
+		if (!strcmp(answer, *(dp + random))) {
+			gotoxy(76, 9);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14 | (0 << 4));
 			printf("정답입니다!\n");
-			count++;
-			//printf("%d", count);
 		}
-		else if (answer != 0 && answer != random + 1) {
-			gotoxy(64, 9);
-			printf("땡! 정답은 %d(%s)입니다.\n", random + 1, *(dp + random));
+		else {
+			gotoxy(67, 9);
+			printf("땡! 정답은 %s입니다.\n", *(dp + random));
+			gotoxy(82, 28);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12 | (0 << 4));
-			for (int n = 3; n > 0; --n) {
-				gotoxy(82, 29);
-				printf("%d초 후에 메인화면으로 돌아갑니다...\n", n);
-				Sleep(1000);
-			}
-			//Sleep(2500);
+			printf("3초 후에 메인화면으로 돌아갑니다...");
+			Sleep(3000);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15 | (0 << 4));
 			break;
 		}

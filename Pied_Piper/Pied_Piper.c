@@ -180,7 +180,7 @@ int pr_str_array(char** dp, int n) {
 			gotoxy(67, 9);
 			printf("땡! 정답은 %s입니다.\n", *(dp + random));
 			gotoxy(82, 28);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12 | (0 << 4));
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11 | (0 << 4));
 			for (int n = 3; n > 0; --n) {
 				gotoxy(82, 29);
 				printf("%d초 후에 메인화면으로 돌아갑니다...\n", n);

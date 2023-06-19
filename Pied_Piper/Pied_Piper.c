@@ -45,11 +45,12 @@ int keyControl() {
 	}
 }
 
+
 int menuDraw() {
 	PlaySound(TEXT("guess_note.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	system("cls");
 
-	
+
 
 	int x = 23;
 	int y = 4;
@@ -64,10 +65,12 @@ int menuDraw() {
 	print_auto_y(&x, &y, "|___|    |___| |_______||______|   |___|    |___| |___|    |_______||___|  |_|");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 
+	
+
 	gotoxy(41, 15);
 	printf("들리는 음을 듣고 알맞은 음을 쓰세요~!");
-	gotoxy(46, 16);
-	printf("다시 들으려면 0을 입력하세요!");
+	gotoxy(35, 17);
+	printf("!게임 시작 전 한글로 설정되어 있는지 확인해주세요!");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 
 
@@ -118,6 +121,7 @@ int menuDraw() {
 	return 0;
 }
 
+
 void print_piano() {
 	gotoxy(34, 11);
 	puts("□□■■ ■■□□□■■ ■■ ■■□□□■■ ■■□□");
@@ -139,19 +143,11 @@ void print_piano() {
 	puts("□□□□□□□□□□□□□□□□□□□□□□□□□□");
 }
 
-// 랜덤 음 출력하는 함수
-int MakeRandNote(int random) {
-	double frequency[] = { 523, 587, 659, 699, 784, 880, 988, 1047, 1175, 1319 };
-	const int note_len = 600;
 
-	Beep(frequency[random], note_len);
-
-	return 0;
-}
 
 int pr_str_array(char** dp, int n) {	
 	while (1) {
-		double frequency[] = { 523.2511, 587.3295, 659.2551, 698.456, 783.9909, 880, 987.7666 };
+		double frequency[] = { 523, 587, 659, 699, 784, 880, 988, 1047, 1175, 1319 };
 		const int note_len = 600;
 
 		srand((unsigned int)time(NULL));
@@ -185,8 +181,12 @@ int pr_str_array(char** dp, int n) {
 			printf("땡! 정답은 %s입니다.\n", *(dp + random));
 			gotoxy(82, 28);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12 | (0 << 4));
-			printf("3초 후에 메인화면으로 돌아갑니다...");
-			Sleep(3000);
+			for (int n = 3; n > 0; --n) {
+				gotoxy(82, 29);
+				printf("%d초 후에 메인화면으로 돌아갑니다...\n", n);
+				Sleep(1000);
+			}
+
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15 | (0 << 4));
 			break;
 		}

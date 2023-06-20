@@ -39,25 +39,96 @@ void move_arrow_key(
 	const int X_MAX = x_max;
 
 	switch (key) {
-		// pressed ¡è
+		// pressed ↑
 	case UP:
 		*y -= size;
 		if (*y < Y_MIN) *y = Y_MAX;
 		break;
-		// pressed ¡é
+		// pressed ↓
 	case DOWN:
 		*y += size;
 		if (*y > Y_MAX) *y = Y_MIN;
 		break;
-		// pressed ¡ç
+		// pressed ←
 	case LEFT:
 		*x -= size;
 		if (*x < X_MIN) *x = X_MAX;
 		break;
-		// pressed ¡æ
+		// pressed →
 	case RIGHT:
 		*x += size;
 		if (*x > X_MAX) *x = X_MIN;
 		break;
+	}
+}
+
+void print_auto_y(int* x, int* y, char* str) {
+	gotoxy(*x, *y);
+	printf(str);
+	*y += 1;
+}
+
+void setColor(int color) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+void print_by_name(char* name) {
+	// set color : GREY
+	setColor(GREY);
+
+	if (strlen(name) > 8) {
+		// 3명 이상이면
+		gotoxy(88, 28);
+	}
+	else {
+		gotoxy(105, 28);
+	}
+	printf("by %s", name);
+
+	setColor(WHITE);
+}
+
+void rectangle(int width, int height, int x, int y) {
+	// ┌――――┐
+	for (int i = 1; i < width / 2; i++) {
+		gotoxy((x + width) / 2 - i, y);
+		printf("─");
+
+		gotoxy((x + width) / 2 + i, y);
+		printf("─");
+		Sleep(1);
+	}
+	gotoxy(x, y);
+	printf("┌");
+	gotoxy(x + width, y);
+	printf("┐");
+
+	// ｜      ｜
+	for (int i = 1; i < height; i++) {
+		gotoxy(x, y + i);
+		// ｜      ｜
+		printf("│");
+
+		for (int j = 1; j < width - 1; j++) {
+			printf(" ");
+		}
+		printf(" ");
+
+		printf("│");
+		Sleep(1);
+	}
+
+	// └――――┘
+	gotoxy(x, y + height);
+	printf("└");
+	gotoxy(x + width, y + height);
+	printf("┘");
+	for (int i = 1; i < width / 2; i++) {
+		gotoxy(x + i, y + height);
+		printf("─");
+
+		gotoxy((x + width) - i, y + height);
+		printf("─");
+		Sleep(1);
 	}
 }

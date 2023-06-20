@@ -161,6 +161,8 @@ int pr_str_array(char** dp, int n) {
 		Beep(frequency[random], note_len);
 
 
+
+
 		system("cls");
 
 		char answer[10];

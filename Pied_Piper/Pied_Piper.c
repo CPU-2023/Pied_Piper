@@ -47,7 +47,6 @@ int keyControl() {
 
 
 int menuDraw() {
-	PlaySound(TEXT("guess_note.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	system("cls");
 
 
@@ -55,7 +54,7 @@ int menuDraw() {
 	int x = 23;
 	int y = 4;
 
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 5);
 	print_auto_y(&x, &y, " _______  ___   _______  ______     _______  ___   _______  _______  ______   ");
 	print_auto_y(&x, &y, "|       ||   | |       ||      |   |       ||   | |       ||       ||    _ |  ");
 	print_auto_y(&x, &y, "|    _  ||   | |    ___||  _    |  |    _  ||   | |    _  ||    ___||   | ||  ");
@@ -74,9 +73,56 @@ int menuDraw() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 
 
+	x = 86;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+	gotoxy(x, ++y);
+	printf("              ,-.");
+	gotoxy(x, ++y);
+	printf("             /  (  '");
+	gotoxy(x, ++y);
+	printf("     *  _.--'!   '--._");
+	gotoxy(x, ++y);
+	printf("      ,'              ''.");
+	gotoxy(x, ++y);
+	printf("'    |!                   \\");
+	gotoxy(x, ++y);
+	printf("   _.'  O      ___       ! \\");
+	gotoxy(x, ++y);
+	printf("  (_.-^, __..-'  ''''--.   )");
+	gotoxy(x, ++y);
+	printf("      /,'        '    _.' /");
+	gotoxy(x, ++y);
+	printf("   '         *    .-''    |");
+	gotoxy(x, ++y);
+	printf("                 (..--^.  ' ");
+	gotoxy(x, ++y);
+	printf("                       | /");
+	gotoxy(x, ++y);
+	printf("                       '");
+
+
+
+	x = 9;
+	y = 18;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+	gotoxy(x, ++y);
+	printf("       .");
+	gotoxy(x, ++y);
+	printf("      '':''");
+	gotoxy(x, ++y);
+	printf("    ___:____     |'\\ /'| ");
+	gotoxy(x, ++y);
+	printf("  ,'        `.    \\   /");
+	gotoxy(x, ++y);
+	printf("  |  O        \\___/   |");
+	gotoxy(x, ++y);
+	printf("~^~^~^~^~^~^~^~^~^~^~^~^~");
+
+
+
 	x = 50;
 	y = 21;
-
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	gotoxy(x - 2, y); // -2한 이유는 >를 출력하기 위해서
 	printf(">     게 임 시 작 \n");
 	gotoxy(x, y + 2);
@@ -141,6 +187,45 @@ void print_piano() {
 	puts("□   □   □   □   □   □   □   □   □   □   □");
 	gotoxy(34, 19);
 	puts("□□□□□□□□□□□□□□□□□□□□□□□□□□");
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
+	gotoxy(30, 21);
+	printf("한글이 입력되지 않는다면 작성 후 스페이스바를 한 번 눌러주세요!");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+
+
+	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+	//gotoxy(9, 6);
+	//printf("======o     o======");
+	//gotoxy(9, 7);
+	//printf("   ___________");
+	//gotoxy(9, 8);
+	//printf("  |___________|  ");
+	//gotoxy(9, 9);
+	//printf("   |\\  /\\  /\\|");
+	//gotoxy(9, 10);
+	//printf("   |_\\/__\\/__|");
+	//gotoxy(9, 11);
+	//printf("  |___________|   ");
+	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+
+
+	/*SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+	gotoxy(80, 20);
+	printf("                     /|");
+	gotoxy(80, 21);
+	printf("       =  =  =      / |");
+	gotoxy(80, 22);
+	printf("  ____| || || |____/  | -_-_-_-_-_-_");
+	gotoxy(80, 23);
+	printf("|)----| || || |____   |     ");
+	gotoxy(80, 24);
+	printf("  ((  | || || |  ))\\  | _-_-_-_-_-_-");
+	gotoxy(80, 25);
+	printf("   \\_|_||_||_|_//   \\ |");
+	gotoxy(80, 26);
+	printf("    \\___________/    \\|");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);*/
 }
 
 
@@ -155,7 +240,7 @@ int pr_str_array(char** dp, int n) {
 
 		for (int i = 0; i < 7; i++) {
 			if (random == i + 1) {
-				Sleep(200);
+				Sleep(700);
 			}
 		}
 		Beep(frequency[random], note_len);
@@ -227,25 +312,14 @@ void main(void) {
 
 	while (1) {
 		int menuCode = menuDraw();
-		switch (menuCode) {
-		case 0:
+		system("cls");
+		if (menuCode == 0) {
 			pr_str_array(p, SIZE);
-			break;
-		case 2:
-			rule();
-			break;
-		case 4:
-			main();
+		}
+		else if (menuCode == 2) {
 			break;
 		}
-		system("cls");
 	}
-
-	do {
-		gotoxy(x, y);
-		printf("guess note");
-		key = _getch();
-	} while (key != ESC);
 
 	return 0;
 }

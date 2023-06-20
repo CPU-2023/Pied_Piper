@@ -303,6 +303,9 @@ int playGame() {
 		int n = keyControl();
 		switch (n) {
 		case SUBMIT: {
+			if (score > highestScore) {
+				highestScore = score;
+			}
 			return pr_str_array(p, SIZE);
 		}
 		}
@@ -310,21 +313,17 @@ int playGame() {
 	return 0;
 }
 
-
 void main(void) {
 	system("cls");
-
-
 	char* p[SIZE] = { "도", "레", "미", "파", "솔" , "라", "시" };
 	int x = 100, y = 20;
 	char key;
-
-	
 
 	while (1) {
 		int menuCode = menuDraw();
 		system("cls");
 		if (menuCode == 0) {
+			score = 0; // score만 0으로 초기화
 			pr_str_array(p, SIZE);
 		}
 		else if (menuCode == 2) {

@@ -90,7 +90,7 @@ int menuDraw() {
 	printf("'       최고 점수 : % d ", highestScore);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
 	gotoxy(x, ++y);
-	printf("   _.'   O      ___       ! \\");
+	printf("   _.'   O      ___      ! \\");
 	gotoxy(x, ++y);
 	printf("  (_.-^, __..-'  ''''--.   )");
 	gotoxy(x, ++y);
@@ -202,20 +202,25 @@ void print_piano() {
 	printf("스코어: %d", score);
 
 
-	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
-	//gotoxy(9, 6);
-	//printf("======o     o======");
-	//gotoxy(9, 7);
-	//printf("   ___________");
-	//gotoxy(9, 8);
-	//printf("  |___________|  ");
-	//gotoxy(9, 9);
-	//printf("   |\\  /\\  /\\|");
-	//gotoxy(9, 10);
-	//printf("   |_\\/__\\/__|");
-	//gotoxy(9, 11);
-	//printf("  |___________|   ");
-	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+	gotoxy(2, 20);
+	printf("             ,-._");
+	gotoxy(2, 21);
+	printf("           _.-'  '--.");
+	gotoxy(2, 22);
+	printf("         .'      _  -`\_");
+	gotoxy(2, 23);
+	printf("        / .----.`_.'----'");
+	gotoxy(2, 24);
+	printf("        ;/     `");
+	gotoxy(2, 25);
+	printf("       /_;");
+	gotoxy(2, 26);
+	printf("    ._      ._      ._      ._");
+	gotoxy(2, 27);
+	printf("_.-._)`\\_.-._)`\\_.-._)`\\_.-._)`\\_.-._");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+
 
 
 	/*SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);

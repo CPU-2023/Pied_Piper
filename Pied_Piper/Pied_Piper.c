@@ -326,25 +326,14 @@ void main(void) {
 
 	while (1) {
 		int menuCode = menuDraw();
-		switch (menuCode) {
-		case 0:
+		system("cls");
+		if (menuCode == 0) {
 			pr_str_array(p, SIZE);
-			break;
-		case 2:
-			rule();
-			break;
-		case 4:
-			main();
+		}
+		else if (menuCode == 2) {
 			break;
 		}
-		system("cls");
 	}
-
-	do {
-		gotoxy(x, y);
-		printf("guess note");
-		key = _getch();
-	} while (key != ESC);
 
 	return 0;
 }

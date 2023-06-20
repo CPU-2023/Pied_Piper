@@ -39,22 +39,22 @@ void move_arrow_key(
 	const int X_MAX = x_max;
 
 	switch (key) {
-		// pressed ↑
+	// pressed ↑
 	case UP:
 		*y -= size;
 		if (*y < Y_MIN) *y = Y_MAX;
 		break;
-		// pressed ↓
+	// pressed ↓
 	case DOWN:
 		*y += size;
 		if (*y > Y_MAX) *y = Y_MIN;
 		break;
-		// pressed ←
+	// pressed ←
 	case LEFT:
 		*x -= size;
 		if (*x < X_MIN) *x = X_MAX;
 		break;
-		// pressed →
+	// pressed →
 	case RIGHT:
 		*x += size;
 		if (*x > X_MAX) *x = X_MIN;

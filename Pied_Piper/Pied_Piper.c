@@ -17,6 +17,9 @@ void guess_note(void);
 
 char* p[SIZE] = { "도", "레", "미", "파", "솔" , "라", "시", "도", "레", "미" };
 
+int score = 0; // 스코어 변수
+int highestScore = 0; // 최고 점수 변수
+
 
 int keyControl() {
 	char temp;
@@ -44,10 +47,9 @@ int keyControl() {
 		return 0;
 	}
 }
-
-
 int menuDraw() {
 	system("cls");
+
 
 
 
@@ -83,10 +85,12 @@ int menuDraw() {
 	printf("     *  _.--'!   '--._");
 	gotoxy(x, ++y);
 	printf("      ,'              ''.");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	gotoxy(x, ++y);
-	printf("'    |!                   \\");
+	printf("'       최고 점수 : % d ", highestScore);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
 	gotoxy(x, ++y);
-	printf("   _.'  O      ___       ! \\");
+	printf("   _.'   O      ___       ! \\");
 	gotoxy(x, ++y);
 	printf("  (_.-^, __..-'  ''''--.   )");
 	gotoxy(x, ++y);
@@ -103,7 +107,7 @@ int menuDraw() {
 
 
 	x = 9;
-	y = 18;
+	y = 20;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
 	gotoxy(x, ++y);
 	printf("       .");
@@ -128,7 +132,7 @@ int menuDraw() {
 	gotoxy(x, y + 2);
 	printf("    게 임 종 료 \n");
 	print_by_name("윤소희");
-
+	
 
 
 	while (1) {
@@ -140,9 +144,9 @@ int menuDraw() {
 				printf(" ");
 
 				gotoxy(x - 2, y -= 2); //새로 이동한 위치로 이동하여
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 				printf(">"); //다시 그리기
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 			}
 			break;
 		}
@@ -152,9 +156,9 @@ int menuDraw() {
 				printf(" ");
 
 				gotoxy(x - 2, y += 2);
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 				printf(">");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 			}
 			break;
 		}
@@ -192,6 +196,10 @@ void print_piano() {
 	gotoxy(30, 21);
 	printf("한글이 입력되지 않는다면 작성 후 스페이스바를 한 번 눌러주세요!");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+
+	// 스코어 출력 위치
+	gotoxy(5, 2);
+	printf("스코어: %d", score);
 
 
 	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
@@ -240,7 +248,7 @@ int pr_str_array(char** dp, int n) {
 
 		for (int i = 0; i < 7; i++) {
 			if (random == i + 1) {
-				Sleep(700);
+				Sleep(1000);
 			}
 		}
 		Beep(frequency[random], note_len);
@@ -259,10 +267,17 @@ int pr_str_array(char** dp, int n) {
 		scanf("%s", answer);
 
 		if (!strcmp(answer, *(dp + random))) {
+			score += 50;
+
+			if (score > highestScore) { // 현재 점수가 최고 점수보다 높으면 최고 점수 갱신
+				highestScore = score;
+			}
+
 			gotoxy(76, 9);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14 | (0 << 4));
 			printf("정답입니다!\n");
 		}
+
 		else {
 			gotoxy(67, 9);
 			printf("땡! 정답은 %s입니다.\n", *(dp + random));
@@ -282,6 +297,7 @@ int pr_str_array(char** dp, int n) {
 }
 
 int playGame() {
+	score = 0;
 	char* p[SIZE] = { "도", "레", "미", "파", "솔" , "라", "시" };
 	while (1) {
 		int n = keyControl();
@@ -293,22 +309,17 @@ int playGame() {
 	}
 	return 0;
 }
-void rule() {
-	system("cls");
-	gotoxy(26, 14);
-	printf("게임 시작 전 한글로 설정되어 있는지 확인해주세요.");
-	gotoxy(75, 29);
-	printf("게임을 시작하려면 스페이스바를 누르세요...");
-	playGame();
-}
+
 
 void main(void) {
 	system("cls");
+
 
 	char* p[SIZE] = { "도", "레", "미", "파", "솔" , "라", "시" };
 	int x = 100, y = 20;
 	char key;
 
+	
 
 	while (1) {
 		int menuCode = menuDraw();

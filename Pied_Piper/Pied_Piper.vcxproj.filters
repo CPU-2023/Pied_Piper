@@ -18,17 +18,11 @@
     <ClCompile Include="Pied_Piper.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Pied_Piper.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="modules.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Pied_Piper.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="modules.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>

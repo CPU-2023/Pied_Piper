@@ -1,5 +1,15 @@
-﻿#include "Pied_Piper.h"
-// _getch() value of ESC key
+﻿// _getch() value of ESC key
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include <time.h>
+#include <windows.h>
+#include "modules.h"
+
+
+#define SIZE 10
+
 #define ESC 27
 #define UP 72
 #define DOWN 80
@@ -337,4 +347,19 @@ void main(void) {
 	}
 
 	return 0;
+}
+
+void guess_note() {
+	system("cls");
+
+	printf("guess note\n");
+
+	int x = 100, y = 20;
+	char key = 0;
+
+	do {
+		gotoxy(x, y);
+		printf("njk");
+		key = _getch();
+	} while (key != ESC);
 }

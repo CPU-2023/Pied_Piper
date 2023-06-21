@@ -141,11 +141,9 @@
   <ItemGroup>
     <ClCompile Include="modules.c" />
     <ClCompile Include="Pied_Piper.c" />
-    <ClCompile Include="Pied_Piper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="modules.h" />
-    <ClInclude Include="Pied_Piper.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="resource2.h" />
